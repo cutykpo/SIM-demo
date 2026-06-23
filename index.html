@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIM 2.0 — Home Safety Assessment</title>
+<style>
+  :root {
+    --blue: #185FA5;
+    --blue-dark: #0C447C;
+    --blue-light: #E6F1FB;
+    --green: #27500A;
+    --green-light: #EAF3DE;
+    --red: #A32D2D;
+    --red-light: #FCEBEB;
+    --amber: #633806;
+    --amber-light: #FAEEDA;
+    --gray: #5F5E5A;
+    --gray-light: #F1EFE8;
+    --text: #1a1a18;
+    --text-secondary: #5F5E5A;
+    --text-tertiary: #888780;
+    --border: rgba(0,0,0,0.12);
+    --border-strong: rgba(0,0,0,0.25);
+    --bg: #ffffff;
+    --bg-secondary: #F7F6F2;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--bg);
+    border-bottom: 0.5px solid var(--border);
+    padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+  .nav-logo-icon {
+    width: 28px; height: 28px; border-radius: 7px;
+    background: var(--blue);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav-logo-icon svg { width: 16px; height: 16px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; }
+  .nav-logo span { font-size: 15px; font-weight: 600; color: var(--text); }
+  .nav-badge {
+    font-size: 10px; font-weight: 600; padding: 2px 7px;
+    background: var(--blue-light); color: var(--blue-dark);
+    border-radius: 20px; letter-spacing: .04em;
+  }
+  .nav-cta {
+    background: var(--blue); color: white;
+    border: none; border-radius: var(--radius-sm);
+    padding: 8px 16px; font-size: 13px; font-weight: 500;
+    cursor: pointer; text-decoration: none;
+  }
+
+  /* HERO */
+  .hero {
+    max-width: 960px; margin: 0 auto;
+    padding: 72px 24px 64px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 48px; align-items: center;
+  }
+  .hero-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--blue);
+    margin-bottom: 16px;
+  }
+  .hero-title {
+    font-size: 36px; font-weight: 700; line-height: 1.15;
+    color: var(--text); margin-bottom: 16px;
+  }
+  .hero-title em { font-style: normal; color: var(--blue); }
+  .hero-sub {
+    font-size: 16px; color: var(--text-secondary);
+    line-height: 1.65; margin-bottom: 28px;
+  }
+  .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--blue); color: white;
+    border: none; border-radius: var(--radius-sm);
+    padding: 12px 22px; font-size: 14px; font-weight: 500;
+    cursor: pointer; text-decoration: none; display: inline-block;
+  }
+  .btn-primary:hover { background: var(--blue-dark); }
+  .btn-ghost {
+    background: transparent; color: var(--blue);
+    border: 1px solid var(--blue); border-radius: var(--radius-sm);
+    padding: 11px 22px; font-size: 14px; font-weight: 500;
+    cursor: pointer; text-decoration: none; display: inline-block;
+  }
+  .btn-ghost:hover { background: var(--blue-light); }
+
+  /* PHONE MOCKUP */
+  .phone-wrap { display: flex; justify-content: center; }
+  .phone {
+    width: 280px;
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    border-radius: 36px;
+    overflow: hidden;
+    box-shadow: 0 2px 40px rgba(0,0,0,.10);
+  }
+  .phone-statusbar {
+    background: var(--blue); height: 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 16px;
+  }
+  .phone-statusbar span { color: white; font-size: 10px; }
+  .phone-screen { padding: 18px 16px; }
+
+  /* REPORT PREVIEW inside phone */
+  .report-header { margin-bottom: 12px; }
+  .report-title { font-size: 13px; font-weight: 600; color: var(--text); }
+  .report-sub { font-size: 10px; color: var(--text-secondary); margin-top: 2px; }
+  .badge {
+    display: inline-block; font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 20px;
+  }
+  .badge-red { background: var(--red-light); color: var(--red); }
+  .badge-amber { background: var(--amber-light); color: var(--amber); }
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .risk-card {
+    background: var(--bg-secondary); border-radius: var(--radius-sm);
+    padding: 10px; margin-bottom: 8px;
+  }
+  .risk-card-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 4px;
+  }
+  .risk-card-title { font-size: 11px; font-weight: 600; color: var(--text); }
+  .risk-card-body { font-size: 10px; color: var(--text-secondary); line-height: 1.4; }
+  .risk-card-cost { font-size: 10px; color: var(--blue); margin-top: 4px; }
+  .score-bar-wrap { margin-top: 12px; }
+  .score-bar-label {
+    display: flex; justify-content: space-between;
+    font-size: 10px; color: var(--text-secondary); margin-bottom: 4px;
+  }
+  .score-bar { height: 5px; background: var(--border); border-radius: 3px; }
+  .score-bar-fill { height: 100%; border-radius: 3px; background: #E24B4A; width: 42%; }
+
+  /* STATS */
+  .stats {
+    background: var(--bg-secondary);
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+    padding: 36px 24px;
+  }
+  .stats-inner {
+    max-width: 960px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 24px; text-align: center;
+  }
+  .stat-n { font-size: 28px; font-weight: 700; color: var(--text); }
+  .stat-l { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+
+  /* HOW IT WORKS */
+  .section { max-width: 960px; margin: 0 auto; padding: 64px 24px; }
+  .section-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--blue); margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: 28px; font-weight: 700; color: var(--text);
+    margin-bottom: 40px; max-width: 480px;
+  }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .step {
+    padding: 24px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg);
+  }
+  .step-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--blue-light); color: var(--blue-dark);
+    font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 14px;
+  }
+  .step-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .step-body { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+  /* CONDITIONS */
+  .conditions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 8px; }
+  .cond-pill {
+    padding: 10px 14px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 13px; color: var(--text-secondary);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .cond-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); flex-shrink: 0; }
+
+  /* FOUNDER */
+  .founder-section {
+    background: var(--bg-secondary);
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+    padding: 56px 24px;
+  }
+  .founder-inner {
+    max-width: 720px; margin: 0 auto;
+    display: grid; grid-template-columns: auto 1fr;
+    gap: 32px; align-items: start;
+  }
+  .founder-avatar {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: var(--blue);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 700; color: white; flex-shrink: 0;
+  }
+  .founder-quote {
+    font-size: 17px; line-height: 1.6; color: var(--text);
+    font-style: italic; margin-bottom: 14px;
+  }
+  .founder-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .founder-title { font-size: 13px; color: var(--text-secondary); }
+
+  /* PRICING */
+  .pricing { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .price-card {
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    background: var(--bg);
+  }
+  .price-card.featured {
+    border: 2px solid var(--blue);
+    position: relative;
+  }
+  .price-card-label {
+    font-size: 10px; font-weight: 700; letter-spacing: .06em;
+    text-transform: uppercase; color: var(--blue);
+    margin-bottom: 8px;
+  }
+  .price-card-name { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .price-card-price { font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .price-card-sub { font-size: 12px; color: var(--text-secondary); margin-bottom: 16px; }
+  .price-card-features { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .price-card-features li { font-size: 13px; color: var(--text-secondary); display: flex; gap: 8px; align-items: flex-start; }
+  .price-card-features li::before { content: '✓'; color: var(--blue); font-weight: 700; flex-shrink: 0; }
+  .most-popular {
+    position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+    background: var(--blue); color: white;
+    font-size: 10px; font-weight: 700; letter-spacing: .06em;
+    padding: 3px 10px; border-radius: 20px; white-space: nowrap;
+  }
+
+  /* TECH STACK */
+  .tech-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .tech-pill {
+    padding: 12px; border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm); text-align: center;
+    background: var(--bg);
+  }
+  .tech-pill-name { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .tech-pill-role { font-size: 11px; color: var(--text-secondary); }
+
+  /* FOOTER */
+  footer {
+    border-top: 0.5px solid var(--border);
+    padding: 32px 24px;
+    text-align: center;
+  }
+  .footer-inner { max-width: 960px; margin: 0 auto; }
+  .footer-logo { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .footer-sub { font-size: 13px; color: var(--text-secondary); }
+  .footer-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 16px; font-size: 11px; color: var(--text-secondary);
+    background: var(--bg-secondary); padding: 6px 12px;
+    border-radius: 20px; border: 0.5px solid var(--border);
+  }
+  .gemini-dot { width: 8px; height: 8px; border-radius: 50%; background: #185FA5; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; padding: 40px 20px; gap: 32px; }
+    .phone-wrap { order: -1; }
+    .hero-title { font-size: 28px; }
+    .stats-inner { grid-template-columns: repeat(2, 1fr); }
+    .steps { grid-template-columns: 1fr; }
+    .conditions { grid-template-columns: repeat(2, 1fr); }
+    .founder-inner { grid-template-columns: 1fr; }
+    .pricing { grid-template-columns: 1fr; }
+    .tech-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <span>SIM 2.0</span>
+    <span class="nav-badge">XPRIZE Demo</span>
+  </a>
+  <a class="nav-cta" href="#pricing">Get started</a>
+</nav>
+
+<section>
+  <div class="hero">
+    <div class="hero-content">
+      <p class="hero-eyebrow">AI-native home safety assessment</p>
+      <h1 class="hero-title">Is your parent's home <em>actually safe</em> for them?</h1>
+      <p class="hero-sub">Upload 5 photos, answer a few clinical questions. In under five minutes, get a personalized safety report built on specialist protocols — specific to your loved one's condition.</p>
+      <div class="hero-actions">
+        <a class="btn-primary" href="#how-it-works">See how it works</a>
+        <a class="btn-ghost" href="#pricing">View pricing</a>
+      </div>
+    </div>
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-statusbar">
+          <span>9:41</span><span>SIM 2.0</span><span>100%</span>
+        </div>
+        <div class="phone-screen">
+          <div class="report-header" style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+            <div>
+              <div class="report-title">Safety Assessment Report</div>
+              <div class="report-sub">Parkinson's profile &middot; 5 rooms analyzed</div>
+            </div>
+            <span class="badge badge-red">3 critical</span>
+          </div>
+          <div class="risk-card">
+            <div class="risk-card-header">
+              <span class="risk-card-title">No grab bars in bathroom</span>
+              <span class="badge badge-red">High</span>
+            </div>
+            <p class="risk-card-body">Parkinson's patients have 3x higher fall risk in wet environments. Install bilateral grab bars at tub and toilet.</p>
+            <p class="risk-card-cost">Estimated cost: $80–$150</p>
+          </div>
+          <div class="risk-card">
+            <div class="risk-card-header">
+              <span class="risk-card-title">Loose rug at entrance</span>
+              <span class="badge badge-red">High</span>
+            </div>
+            <p class="risk-card-body">Festination gait pattern significantly increases trip risk on unsecured rugs.</p>
+            <p class="risk-card-cost">Remove or add non-slip pad: $0–$15</p>
+          </div>
+          <div class="risk-card">
+            <div class="risk-card-header">
+              <span class="risk-card-title">Low hallway lighting</span>
+              <span class="badge badge-amber">Medium</span>
+            </div>
+            <p class="risk-card-body">Low contrast increases disorientation risk at night.</p>
+            <p class="risk-card-cost">Estimated cost: $20–$60</p>
+          </div>
+          <div class="score-bar-wrap">
+            <div class="score-bar-label">
+              <span>Overall safety score</span>
+              <span style="font-weight:600;color:#A32D2D">4.2 / 10</span>
+            </div>
+            <div class="score-bar"><div class="score-bar-fill"></div></div>
+            <p style="font-size:10px;color:var(--text-tertiary);margin-top:4px">Total estimated adaptation cost: $115–$225</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stats-inner">
+    <div>
+      <div class="stat-n">1 in 4</div>
+      <div class="stat-l">adults over 65 fall each year</div>
+    </div>
+    <div>
+      <div class="stat-n">$50B</div>
+      <div class="stat-l">annual direct medical cost of falls</div>
+    </div>
+    <div>
+      <div class="stat-n">5 min</div>
+      <div class="stat-l">to complete an assessment</div>
+    </div>
+    <div>
+      <div class="stat-n">$39</div>
+      <div class="stat-l">vs $300–$500 for an OT visit</div>
+    </div>
+  </div>
+</div>
+
+<section id="how-it-works">
+  <div class="section">
+    <p class="section-eyebrow">How it works</p>
+    <h2 class="section-title">A clinical protocol, run by AI</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">Clinical intake</div>
+        <p class="step-body">The AI agent asks about the resident's condition, mobility aids, fall history, and cognitive status — the same questions a specialist would ask before a home visit.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title">Guided photo upload</div>
+        <p class="step-body">Upload 5 photos — entrance, bathroom, kitchen, bedroom, and hallways. The agent guides the angle and framing for each room based on the specific condition.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title">Gemini Vision analysis</div>
+        <p class="step-body">Gemini 2.5 Pro analyzes each image against the clinical risk profile of the resident's condition. Every recommendation reflects condition-specific protocols.</p>
+      </div>
+    </div>
+    <div style="margin-top:40px">
+      <p class="section-eyebrow" style="margin-bottom:12px">Conditions covered</p>
+      <div class="conditions">
+        <div class="cond-pill"><div class="cond-dot"></div>Parkinson's disease</div>
+        <div class="cond-pill"><div class="cond-dot"></div>Stroke / hemiplegia</div>
+        <div class="cond-pill"><div class="cond-dot"></div>Dementia</div>
+        <div class="cond-pill"><div class="cond-dot"></div>Arthritis</div>
+        <div class="cond-pill"><div class="cond-dot"></div>Reduced mobility</div>
+        <div class="cond-pill"><div class="cond-dot"></div>Low vision</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="founder-section">
+  <div class="founder-inner">
+    <div class="founder-avatar">AM</div>
+    <div>
+      <p class="founder-quote">"I built this because I kept discharging patients to homes that were never assessed. A patient with Parkinson's sent home with no grab bars. A stroke survivor returning to a step-in tub. Small things, fixable things, that no one ever flagged because the assessment never happened."</p>
+      <div class="founder-name">Dr. Alejandro M.</div>
+      <div class="founder-title">Internal Medicine &amp; Rheumatology specialist &middot; Emergency physician, Friuli Venezia Giulia, Italy</div>
+    </div>
+  </div>
+</div>
+
+<section id="pricing">
+  <div class="section">
+    <p class="section-eyebrow">Pricing</p>
+    <h2 class="section-title">Accessible pricing for families and professionals</h2>
+    <div class="pricing">
+      <div class="price-card">
+        <div class="price-card-label">Individual</div>
+        <div class="price-card-name">Basic report</div>
+        <div class="price-card-price">$39</div>
+        <div class="price-card-sub">One-time payment</div>
+        <ul class="price-card-features">
+          <li>5-room photo analysis</li>
+          <li>Condition-specific risk profile</li>
+          <li>Prioritized recommendations</li>
+          <li>PDF report download</li>
+        </ul>
+      </div>
+      <div class="price-card featured">
+        <div class="most-popular">Most popular</div>
+        <div class="price-card-label">Individual</div>
+        <div class="price-card-name">Premium report</div>
+        <div class="price-card-price">$59</div>
+        <div class="price-card-sub">One-time payment</div>
+        <ul class="price-card-features">
+          <li>Everything in Basic</li>
+          <li>Itemized cost estimates</li>
+          <li>Contractor checklist</li>
+          <li>30-day follow-up assessment</li>
+        </ul>
+      </div>
+      <div class="price-card">
+        <div class="price-card-label">Professional</div>
+        <div class="price-card-name">Agency plan</div>
+        <div class="price-card-price">$149<span style="font-size:14px;font-weight:400;color:var(--text-secondary)">/mo</span></div>
+        <div class="price-card-sub">Unlimited assessments</div>
+        <ul class="price-card-features">
+          <li>Multi-client dashboard</li>
+          <li>White-label PDF reports</li>
+          <li>API access</li>
+          <li>Priority support</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section" style="padding-top:0">
+    <p class="section-eyebrow">Built with</p>
+    <h2 class="section-title">Powered by Google's full AI stack</h2>
+    <div class="tech-grid">
+      <div class="tech-pill">
+        <div class="tech-pill-name">Gemini 2.5 Pro</div>
+        <div class="tech-pill-role">Multimodal AI core</div>
+      </div>
+      <div class="tech-pill">
+        <div class="tech-pill-name">Cloud Run</div>
+        <div class="tech-pill-role">Backend / API</div>
+      </div>
+      <div class="tech-pill">
+        <div class="tech-pill-name">Firebase</div>
+        <div class="tech-pill-role">Auth + database</div>
+      </div>
+      <div class="tech-pill">
+        <div class="tech-pill-name">Cloud Storage</div>
+        <div class="tech-pill-role">Photo storage</div>
+      </div>
+      <div class="tech-pill">
+        <div class="tech-pill-name">Next.js</div>
+        <div class="tech-pill-role">Frontend</div>
+      </div>
+      <div class="tech-pill">
+        <div class="tech-pill-name">Stripe</div>
+        <div class="tech-pill-role">Payments</div>
+      </div>
+      <div class="tech-pill">
+        <div class="tech-pill-name">Puppeteer</div>
+        <div class="tech-pill-role">PDF generation</div>
+      </div>
+      <div class="tech-pill">
+        <div class="tech-pill-name">Node.js</div>
+        <div class="tech-pill-role">API orchestration</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">SIM 2.0</div>
+    <div class="footer-sub">Home safety assessments for older adults, powered by Gemini Vision.</div>
+    <div class="footer-badge">
+      <div class="gemini-dot"></div>
+      Built for the Build with Gemini XPRIZE &middot; 2026
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
